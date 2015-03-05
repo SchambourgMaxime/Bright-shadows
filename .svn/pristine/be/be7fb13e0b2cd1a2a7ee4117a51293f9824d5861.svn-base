@@ -1,0 +1,27 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+
+public class UIManager : MonoBehaviour
+{
+
+    public static UIManager instance { get; private set; }
+	[SerializeField] private GameObject redBackground;
+	public float alpha;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+	void Start(){
+		alpha = 0.0f;
+	}
+
+	void Update(){
+		redBackground.GetComponent<Image> ().color = new Color (142.0f, 0.0f, 0.0f, alpha);
+	}
+}

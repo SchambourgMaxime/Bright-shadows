@@ -1,0 +1,32 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PlayerMechanics : MonoBehaviour {
+	private float fearLevel;
+	private bool isAfraid;
+	// Use this for initialization
+	void Start () {
+		fearLevel = 100.0f;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (isAfraid)
+			fearLevel = fearLevel - 0.1f;
+		Debug.Log (fearLevel);
+		Debug.Log (isAfraid);
+	}
+
+	void OnTriggerEnter(Collider collision){
+		GameObject collisionObject = collision.gameObject;
+		Debug.Log ("feg");
+		if (collisionObject.CompareTag ("Enemy"))
+			isAfraid = true;
+	}
+
+	void OnTriggerExit(Collider collision){
+		GameObject collisionObject = collision.gameObject;
+		if (collisionObject.CompareTag ("Enemy"))
+			isAfraid = false;
+	}
+}

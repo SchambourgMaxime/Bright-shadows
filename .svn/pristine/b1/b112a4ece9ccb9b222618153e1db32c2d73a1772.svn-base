@@ -1,0 +1,41 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PlayerMechanics : MonoBehaviour {
+	private float fearLevel;
+	private bool isAfraid;
+	[SerializeField] private float maxFear;
+	[SerializeField] private float relaxSpeed;
+	[SerializeField] private float fearSpeed;
+	// Use this for initialization
+	void Start () {
+		fearLevel = 0.0f;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		Debug.Log (fearLevel);
+		if (isAfraid && fearLevel <= maxFear && GameMaster.instance.paused==false)
+			fearLevel = fearLevel + fearSpeed;
+		else if (fearLevel >= maxFear) {
+			UIManager.instance.gameOver.SetActive (true);
+			Time.timeScale=0.0f;
+		}
+		else if (!isAfraid && fearLevel >= 0.0f && GameMaster.instance.paused==false) 
+			fearLevel = fearLevel - relaxSpeed;
+		UIManager.instance.alpha = fearLevel * 2.55f / 100.0f;
+	}
+
+	void OnTriggerEnter(Collider collision){
+		GameObject collisionObject = collision.gameObject;
+
+		if (collisionObject.CompareTag ("Enemy"))
+			isAfraid = true;
+	}
+
+	void OnTriggerExit(Collider collision){
+		GameObject collisionObject = collision.gameObject;
+		if (collisionObject.CompareTag ("Enemy"))
+			isAfraid = false;
+	}
+}

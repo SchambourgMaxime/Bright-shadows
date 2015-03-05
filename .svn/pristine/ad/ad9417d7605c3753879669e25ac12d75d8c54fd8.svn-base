@@ -1,0 +1,23 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public abstract class EnemyBehaviour : MonoBehaviour {
+
+    [SerializeField]
+    protected float _initialFearRate = 50.0f;
+    [SerializeField]
+    private float _fearConquerRate = 10.0f;
+
+    public abstract float GetFearFactor();
+    public abstract void OnFearConquered();
+
+    protected void Init()
+    {
+        GetComponentInChildren<EnemyFearZone>().fearConquerRate = _fearConquerRate;
+    }
+
+	public void ChangeDirection(){
+		transform.Rotate (new Vector3(0.0f, 180.0f, 0.0f));
+	}
+
+}

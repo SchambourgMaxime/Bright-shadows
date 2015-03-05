@@ -1,0 +1,61 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class GroundEnemyBehavior : EnemyBehaviour {
+	
+	[SerializeField] private float movementSpeed;
+
+    public float HealthPoints;
+    public int damage;
+
+    private bool dead;
+
+	// Use this for initialization
+	void Start () {
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+			transform.Translate (Vector3.forward * Time.deltaTime * movementSpeed);
+	}
+	
+
+	void OnCollisionEnter(Collision collision){
+		GameObject collisionObject = collision.gameObject;
+
+	    if (collisionObject.CompareTag("Enemy"))
+	        Physics.IgnoreCollision(collision.collider, transform.collider);
+	    else
+	    {
+	        if (collisionObject.CompareTag("Player"))
+	            collisionObject.GetComponent<PlayerController>().loseLife(damage);
+
+	        ChangeDirection();
+	    }
+	}
+
+	public override float GetFearFactor()
+	{
+		return 0.0f;
+	}
+
+	public override void OnFearConquered()
+	{
+
+	}
+
+    public override void ReceiveLightDamage(float damageValue)
+    {
+        HealthPoints -= damageValue;
+        if (HealthPoints < 0 && !dead)
+        {
+            animation.Play("death" + Random.Range(1, 3));
+            movementSpeed = 0;
+            GetComponent<BoxCollider>().isTrigger = true;
+            GetComponent<Rigidbody>().useGravity = false;
+            GetComponent<Rigidbody>().isKinematic = true;
+            dead = true;
+        }
+    }
+}

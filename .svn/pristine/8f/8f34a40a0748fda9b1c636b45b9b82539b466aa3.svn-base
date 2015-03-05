@@ -1,0 +1,38 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PlayerController : MonoBehaviour {
+
+    public float walkSpeed = 5.0f;
+    public float runSpeed = 7.0f;
+
+    public float jumpSpeed = 15.0f;
+    public float gravity = 10.0f;
+
+    public Transform SocketPosition;
+
+    private Transform _transform;
+
+    private Rigidbody _rigidbody;
+    private Vector3 moveDirection = Vector3.zero;
+
+
+	// Use this for initialization
+	void Start () {
+        _transform = transform;
+        _rigidbody = rigidbody;
+	}
+	
+	// Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public void GetItem(Transform item)
+    {
+        Transform newItem = Instantiate(item.transform, SocketPosition.position, item.transform.rotation) as Transform;
+        newItem.parent = transform;
+    }
+
+}

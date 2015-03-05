@@ -1,0 +1,42 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+
+public class UIManager : MonoBehaviour
+{
+	[SerializeField] private GameObject _gameOver;
+	[SerializeField] private GameObject _pause;
+	[SerializeField] private Image _redBackground;
+
+	public GameObject gameOver { get { return _gameOver; } }
+	public GameObject pause { get { return _pause; } }
+
+    public static UIManager instance { get; private set; }
+
+    private PlayerStats _playerStats;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+	void Start()
+    {
+		gameOver.SetActive(false);
+		pause.SetActive(false);
+
+        _playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+	}
+
+	void Update()
+    {
+        _redBackground.color = new Color(
+            _redBackground.color.r,
+            _redBackground.color.g,
+            _redBackground.color.b,
+            _playerStats.fearLevel * 0.01f);
+	}
+}

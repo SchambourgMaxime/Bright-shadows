@@ -1,0 +1,34 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+
+public class UIManager : MonoBehaviour
+{
+	[SerializeField] private GameObject _gameOver;
+	[SerializeField] private GameObject _pause;
+	[SerializeField] private GameObject redBackground;
+
+	public GameObject gameOver { get { return _gameOver; } }
+	public GameObject pause { get { return _pause; } }
+
+    public static UIManager instance { get; private set; }
+	public float alpha;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+	void Start(){
+		alpha = 0.0f;
+		gameOver.SetActive (false);
+		pause.SetActive(false);
+	}
+
+	void Update(){
+		redBackground.GetComponent<Image> ().color = new Color (142.0f, 0.0f, 0.0f, alpha);
+	}
+}

@@ -1,0 +1,186 @@
+﻿using UnityEngine;
+using System.Collections;
+
+struct FlashlightData
+{
+    private float radius1;
+    private float radius2;
+    private float z1;
+    private float z2;
+}
+
+public class PlayerController : MonoBehaviour
+{
+
+    public float walkSpeed = 5.0f;
+    public float runSpeed = 7.0f;
+
+    public float jumpSpeed = 15.0f;
+    public float gravity = 10.0f;
+
+    public Transform SocketPosition;
+    public Transform TorchSpawnPosition;
+
+    private int XP;
+    public int level;
+
+    public int palierLevelUp;
+
+    private int life;
+    public int baseLife;
+    private int maxLife;
+
+    // Use this for initialization
+    private void Start()
+    {
+        life = maxLife = baseLife;
+        level = 1;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            level++;
+            LevelUp();
+        }
+    }
+
+
+
+    private void LevelUp()
+    {
+
+        GameObject TorchLight = GetComponentInChildren<TorchLightController>().gameObject;
+
+        switch (level % 3)
+        {
+            case 0 :
+                TorchLight.GetComponent<TorchLightController>().lightDamageStrength += 1.0f;
+                break;
+            case 1 :
+                maxLife += 1;
+                break;
+            case 2 :
+                Light[] lightTab;
+
+                Light backLight = null;
+
+                lightTab = GetComponentsInChildren<Light>();
+
+                for (int i = 0; i < lightTab.Length; i++)
+                {
+                    if (lightTab[i].gameObject.CompareTag("SpotLightPlayer"))
+                        backLight = lightTab[i];
+                }
+
+                if (backLight != null)
+                {
+                    backLight.intensity += ((15/100)*backLight.intensity);
+                    backLight.spotAngle += 10;
+                }
+
+                switch (level)
+                {
+                    case 2 :
+                        TorchLight.GetComponents<SphereCollider>()[0].radius = 0.9f;
+                        TorchLight.GetComponents<SphereCollider>()[0].center = new Vector3(0.0f, 0.0f, 3.5f);
+
+                        TorchLight.GetComponents<SphereCollider>()[1].radius = 0.5f;
+                        TorchLight.GetComponents<SphereCollider>()[1].center = new Vector3(0.0f, 0.0f, 2.0f);
+
+                        lightTab = TorchLight.GetComponentsInChildren<Light>();
+
+                        if (lightTab[0].type == LightType.Spot)
+                        {
+                            lightTab[0].spotAngle = 30;
+                            lightTab[0].range = 4;
+                        }
+                        else
+                        {
+                            lightTab[1].spotAngle = 30;
+                            lightTab[1].range = 4;
+                        }
+
+                        lightTab[0].intensity = lightTab[1].intensity = 0.5f;
+
+                        break;
+                    case 5 :
+                        TorchLight.GetComponents<SphereCollider>()[0].radius = 1.3f;
+                        TorchLight.GetComponents<SphereCollider>()[0].center = new Vector3(0.0f, 0.0f, 3.9f);
+
+                        TorchLight.GetComponents<SphereCollider>()[1].radius = 0.7f;
+                        TorchLight.GetComponents<SphereCollider>()[1].center = new Vector3(0.0f, 0.0f, 2.0f);
+
+                        lightTab = TorchLight.GetComponentsInChildren<Light>();
+
+                        if (lightTab[0].type == LightType.Spot)
+                        {
+                            lightTab[0].spotAngle = 40;
+                            lightTab[0].range = 4;
+                        }
+                        else
+                        {
+                            lightTab[1].spotAngle = 40;
+                            lightTab[1].range = 4;
+                        }
+
+                        lightTab[0].intensity = lightTab[1].intensity = 1.0f;
+                        break;
+                    case 8 :
+                         TorchLight.GetComponents<SphereCollider>()[0].radius = 1.7f;
+                        TorchLight.GetComponents<SphereCollider>()[0].center = new Vector3(0.0f, 0.0f, 4.7f);
+
+                        TorchLight.GetComponents<SphereCollider>()[1].radius = 0.8f;
+                        TorchLight.GetComponents<SphereCollider>()[1].center = new Vector3(0.0f, 0.0f, 2.2f);
+
+                        lightTab = TorchLight.GetComponentsInChildren<Light>();
+
+                        if (lightTab[0].type == LightType.Spot)
+                        {
+                            lightTab[0].spotAngle = 45;
+                            lightTab[0].range = 6;
+                        }
+                        else
+                        {
+                            lightTab[1].spotAngle = 45;
+                            lightTab[1].range = 6;
+                        }
+
+                        lightTab[0].intensity = lightTab[1].intensity = 2.0f;
+                        break;
+                }
+                break;
+        }
+
+        life = maxLife;
+    }
+
+    public void GetItem(Transform item)
+    {
+        Transform newItem = Instantiate(item.transform, TorchSpawnPosition.position, item.transform.rotation) as Transform;
+        AnimationHandler animationHandler = GetComponentInChildren<AnimationHandler>();
+        animationHandler.activateIK = true;
+        newItem.parent = animationHandler.transform;
+    }
+
+    public void loseLife(int lifeLost)
+    {
+        life -= lifeLost;
+        if (life <= 0)
+            UIManager.instance.GameOver();
+    }
+
+    public void KillReward(int XPGagne)
+    {
+        XP += XPGagne;
+        if (XP > level * palierLevelUp)
+            level++; // YEAH!
+    }
+
+    public int getLife()
+    {
+        return life;
+    }
+}

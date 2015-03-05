@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4a7c847a5f06e6d48b4c4504b2e81f62
+labels:
+- Cliff
+- Frost
+- Ground
+- Ice
+- Rock
+- Snow
+- Stone
+- Terrain
+- Frozen
+NativeFormatImporter:
+  userData: 

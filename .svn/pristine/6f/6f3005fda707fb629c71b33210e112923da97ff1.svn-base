@@ -1,0 +1,33 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class RandomSpawn : MonoBehaviour {
+    int nbSpawn=1;
+    public GameObject luciole;
+	// Use this for initialization
+	void Start () {
+        for (int i = 0;i<nbSpawn;i++){
+            float x = Random.Range(1.0f, 148.0f);
+            float y = Random.Range(1.0f, 50.0f);
+            float z = 5.0f;
+            Vector3 spawnPosition = new Vector3(x,y,z); //spawnPosition
+            float v = Random.Range(1.0f, 5.0f); //vitesse
+            float l = Random.Range(10.0f, 50.0f); //vie
+           // int id = Random.Range(1, 5); //id mob
+            spawnNewMob(spawnPosition, v, l);
+        }
+	
+	}
+
+    private void spawnNewMob(Vector3 position, float speed, float life)
+    {
+        Instantiate(luciole, position, Quaternion.identity);
+        luciole.GetComponent<LucioleBehavior>().create(speed, life);
+    }
+
+
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}

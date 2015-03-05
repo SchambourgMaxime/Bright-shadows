@@ -1,0 +1,48 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class GroundEnemyBehavior : EnemyBehaviour {
+	
+	[SerializeField] private float movementSpeed;
+
+    public float HealthPoints;
+
+	// Use this for initialization
+	void Start () {
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+			transform.Translate (Vector3.forward * Time.deltaTime * movementSpeed);
+	}
+	
+
+	void OnCollisionEnter(Collision collision){
+		GameObject collisionObject = collision.gameObject;
+        Debug.Log("bla");
+
+		if (collisionObject.CompareTag ("Enemy") || collisionObject.CompareTag ("Player"))
+			Physics.IgnoreCollision (collision.collider, transform.collider);
+		else
+		    ChangeDirection();
+	}
+
+	public override float GetFearFactor()
+	{
+		return 0.0f;
+	}
+
+	public override void OnFearConquered()
+	{
+
+	}
+
+    public override void ReceiveLightDamage(float damageValue)
+    {
+        Debug.Log("bang");
+        HealthPoints -= damageValue;
+        if(HealthPoints < 0)
+            Destroy(gameObject);
+    }
+}

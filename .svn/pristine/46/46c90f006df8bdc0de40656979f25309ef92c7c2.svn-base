@@ -1,0 +1,32 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class GameMaster : MonoBehaviour
+{
+	private bool paused=false;
+    public static GameMaster instance { get; private set; }
+
+
+    public Transform playerStart;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+	void Update(){
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			if (!paused) {
+				UIManager.instance.pause.SetActive (true);
+				Time.timeScale=0.0f;
+			}
+			else{
+				UIManager.instance.pause.SetActive (false);
+				Time.timeScale=1.0f;
+			}
+		}
+	}
+}

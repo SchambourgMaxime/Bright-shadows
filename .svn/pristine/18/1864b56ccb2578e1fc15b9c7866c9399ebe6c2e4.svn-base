@@ -1,0 +1,39 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class GroundEnemyBehavior : EnemyBehaviour {
+	
+	[SerializeField] private float movementSpeed;
+
+	// Use this for initialization
+	void Start () {
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+			transform.Translate (Vector3.forward * Time.deltaTime * movementSpeed);
+	}
+	
+
+	void OnCollisionEnter(Collision collision){
+		GameObject collisionObject = collision.gameObject;
+
+		if (collisionObject.CompareTag ("Enemy") || collisionObject.CompareTag ("Player"))
+			Physics.IgnoreCollision (collision.collider, transform.collider);
+
+
+		/*if (collisionObject.CompareTag ("Limit"))
+			ChangeDirection ();*/
+	}
+
+	public override float GetFearFactor()
+	{
+		return 0.0f;
+	}
+
+	public override void OnFearConquered()
+	{
+
+	}
+}

@@ -1,0 +1,96 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+using System.Collections.Generic;
+
+public class UIManager : MonoBehaviour
+{
+	[SerializeField] private GameObject _gameOver;
+	[SerializeField] private GameObject _pause;
+	[SerializeField] private Image _redBackground;
+
+    public GameObject heartIcon;
+    private List<GameObject> instantiatedHearts;
+    public Transform heartPlace;
+	[SerializeField] private GameObject _win;
+
+	public GameObject gameOver { get { return _gameOver; } }
+	public GameObject pause { get { return _pause; } }
+	public GameObject win { get { return _win; } }
+
+    public static UIManager instance { get; private set; }
+
+    private PlayerStats _playerStats;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+	void Start()
+    {
+		gameOver.SetActive(false);
+		pause.SetActive(false);
+		win.SetActive (false);
+
+        _playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+        instantiatedHearts = new List<GameObject>();
+	}
+
+	void Update()
+    {
+        _redBackground.color = new Color(
+            _redBackground.color.r,
+            _redBackground.color.g,
+            _redBackground.color.b,
+            _playerStats.fearLevel * 0.01f);
+	}
+
+	public void GameOver(){
+		Time.timeScale = 0.0f;
+		gameOver.SetActive (true);
+	}
+
+	public void Resume(){
+		Time.timeScale = 1.0f;
+		pause.SetActive (false);
+	}
+
+	public void RestartLevel(){
+		Time.timeScale = 1.0f;
+		Application.LoadLevel ("testAssets");
+	}
+	public void GoToMainMenu(){
+		Application.LoadLevel ("MainMenu");
+	}
+
+	public void WinGame(){
+		Time.timeScale = 0.0f;
+		win.SetActive (true);
+	}
+
+    public void AddHearts(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject heart = Instantiate(heartIcon) as GameObject;
+            heart.SetActive(true);
+            heart.transform.SetParent(heartPlace);
+            instantiatedHearts.Add(heart);
+        }
+    }
+
+    public void RemoveHeart()
+    {
+        if (instantiatedHearts.Count == 0)
+            return;
+
+        GameObject heart = instantiatedHearts[instantiatedHearts.Count - 1];
+        instantiatedHearts.RemoveAt(instantiatedHearts.Count - 1);
+        Destroy(heart);
+    }
+
+}

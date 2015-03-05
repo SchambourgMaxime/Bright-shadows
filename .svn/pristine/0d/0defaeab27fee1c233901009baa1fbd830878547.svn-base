@@ -1,0 +1,56 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PlayerController : MonoBehaviour
+{
+
+    public float walkSpeed = 5.0f;
+    public float runSpeed = 7.0f;
+
+    public float jumpSpeed = 15.0f;
+    public float gravity = 10.0f;
+
+    public Transform SocketPosition;
+
+    private int XP;
+    private int level;
+
+    public int palierLevelUp;
+
+    private float life;
+    public float baseLife;
+    public float maxLife;
+
+    // Use this for initialization
+    private void Start()
+    {
+        life = baseLife;
+        level = 1;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+
+    }
+
+    public void GetItem(Transform item)
+    {
+        Transform newItem = Instantiate(item.transform, SocketPosition.position, item.transform.rotation) as Transform;
+        newItem.parent = GetComponentInChildren<Animator>().transform;
+    }
+
+    public void loseLife(float lifeLost)
+    {
+        life -= lifeLost;
+        if (life <= 0)
+            UIManager.instance.GameOver();
+    }
+
+    public void KillReward(int XPGagne)
+    {
+        XP += XPGagne;
+        if (XP > level * palierLevelUp)
+            level++; // YEAH!
+    }
+}

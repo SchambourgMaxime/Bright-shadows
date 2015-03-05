@@ -1,0 +1,53 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class EnemyFearZone : MonoBehaviour
+{
+
+    private Transform _transform;
+    private bool _playerNearby = false;
+    private PlayerStats _playerStats;
+    private Transform _player;
+    private bool _isScary;
+    private float _fearZoneRadius;
+    private EnemyBehaviour _behaviour;
+
+    void Start () {
+        _isScary = true;
+        _transform = transform;
+        _fearZoneRadius = _transform.localScale.x * 0.5f;
+        _behaviour = _transform.parent.GetComponent<EnemyBehaviour>();
+	}
+	
+	void Update () {
+	    if (_playerNearby)
+        {
+            Scare();
+        }
+	}
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player") == false)
+            return;
+
+        _playerStats = collider.GetComponent<PlayerStats>();
+        _player = collider.transform;
+        _playerNearby = true;
+    }
+
+    void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player") == false)
+            return;
+
+        _playerNearby = false;
+    }
+
+    void Scare()
+    {
+        float distanceFactor = (_fearZoneRadius - (_transform.position - _player.position).magnitude) / _fearZoneRadius;
+        _playerStats.fearLevel = _playerStats.fearLevel + (_behaviour.GetFearFactor() * distanceFactor * Time.deltaTime);
+    }
+
+}

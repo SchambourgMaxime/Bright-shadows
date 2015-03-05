@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\..\ubisoft2015\Assets\Scripts\Managers\GameMaster.cs">
+    <Files>
+      <File FileName="..\..\..\..\ubisoft2015\Assets\Scripts\AnglerFish.cs" Line="30" Column="48" />
+      <File FileName="..\..\..\..\ubisoft2015\Assets\Scripts\Managers\GameMaster.cs" Line="41" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

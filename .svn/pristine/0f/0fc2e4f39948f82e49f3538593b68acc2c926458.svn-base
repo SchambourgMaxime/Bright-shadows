@@ -1,0 +1,50 @@
+﻿using System;
+using UnityEngine;
+using System.Collections;
+using System.Net.Sockets;
+
+public class TorchLightController : MonoBehaviour
+{
+
+    public float upperLimitHeight = 2.0f;
+    public float lowerLimitHeight = -2.0f;
+
+    public float speed;
+
+    private float currentHeight;
+    private Transform myTransform, playerTransform;
+
+    private float lightDamageStrength;
+
+	// Use this for initialization
+	void Start ()
+	{
+	    currentHeight = 0.0f;
+	    myTransform = transform;
+	    playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
+	    Vector3 lookAtTarget = Vector3.forward*2;
+
+	    currentHeight += Input.GetAxis("Mouse Y") * speed * Time.deltaTime;
+
+	    currentHeight = Mathf.Clamp(currentHeight, lowerLimitHeight, upperLimitHeight);
+
+
+	    lookAtTarget = playerTransform.TransformPoint(lookAtTarget + myTransform.localPosition);
+	    lookAtTarget.y += currentHeight;
+
+	    myTransform.LookAt(lookAtTarget);
+	}
+
+    void OnTriggerEnter(Collider Other)
+    {
+        if (Other.gameObject.CompareTag("enemy"))
+        {
+            Other.gameObject.GetComponent<EnemyBehaviour>().ReceiveLightDamage(lightDamageStrength);
+        }
+    }
+}

@@ -1,0 +1,35 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PlayerController : MonoBehaviour {
+
+    public float walkSpeed = 5.0f;
+    public float runSpeed = 7.0f;
+
+    public float jumpHeight = 5.0f;
+
+    private Transform _transform;
+    private float _speed;
+
+    private bool _isJumping;
+	// Use this for initialization
+	void Start () {
+        _speed = 5.0f;
+        _transform = transform;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        _transform.Translate(Vector3.forward * Input.GetAxis("Horizontal") * _speed * Time.deltaTime);
+        if (Input.GetButtonDown("Jump"))
+            _isJumping = true;
+        if (Input.GetButtonUp("Jump"))
+            _isJumping = false;
+
+	}
+
+    void Jump ()
+    {
+        
+    }
+}

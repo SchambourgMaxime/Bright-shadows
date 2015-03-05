@@ -1,0 +1,52 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class EnemyStats : MonoBehaviour {
+
+    public float fearConquerRate = 10.0f;
+
+    private bool _playerNearby = false;
+    private float _conqueredFear = 0.0f;
+    private bool _conquered = false;
+	
+    void Start () {
+	
+	}
+	
+	void Update () {
+        if (_conquered) return;
+
+	    if (_playerNearby)
+        {
+            _conqueredFear += fearConquerRate * Time.deltaTime;
+        }
+
+        if (!_conquered && _conqueredFear > 100.0f)
+        {
+            _conquered = true;
+            OnFearConquered();
+        }
+	}
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player") == false)
+            return;
+
+        _playerNearby = true;
+    }
+
+    void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player") == false)
+            return;
+
+        _playerNearby = false;
+    }
+
+    void OnFearConquered()
+    {
+
+    }
+
+}

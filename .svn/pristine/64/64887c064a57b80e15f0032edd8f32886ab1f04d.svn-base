@@ -1,0 +1,77 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class LucioleBehavior : EnemyBehaviour {
+    private float speed;
+    private float life;
+	private Vector3 currentDirection;
+    private bool isRepulsed;
+    private bool isAttacking;
+    private int timerRepulsed;
+    public GameObject player;
+    public float vit;
+    // Use this for initialization
+	void Start () {
+		currentDirection = Vector3.forward;
+
+	}
+
+    public void create(float inSpeed, float inLife, GameObject inPlayer) {
+        this.speed = inSpeed;
+        this.life = inLife;
+        this.player = inPlayer;
+        isRepulsed = false;
+        isAttacking = false;
+        timerRepulsed=0;
+        this.Start();
+        print(this.speed.ToString());
+    }
+
+	// Update is called once per frame
+	void Update () {
+        vit=speed;
+        Vector3 vecDist = player.GetComponent<PlayerController>().transform.position + new Vector3(0.0f,1.5f,0.0f) - this.transform.position;
+        Vector3 vecMouv = Vector3.Normalize(vecDist);
+        if (isRepulsed) {   
+            transform.Translate(vecMouv * Time.deltaTime * (-speed)); 
+            timerRepulsed--;
+            if (timerRepulsed <= 0) { isRepulsed = true; }
+        } else {
+            if (vecDist.magnitude < 0.5f)
+            {
+                player.GetComponent<PlayerController>().loseLife(0);
+                Destroy(gameObject);
+            }
+
+            else if (vecDist.magnitude < 30.0f) transform.Translate(vecMouv * Time.deltaTime * speed); 
+        }
+    }
+
+    public override void ReceiveLightDamage(float damageValue)
+    {
+        isRepulsed = true;
+        timerRepulsed = 5;
+        life -= damageValue;
+        if (life <= 0) Destroy(gameObject);
+
+		/*GameObject collisionObject = collision.gameObject;
+
+		if(collisionObject.CompareTag("Platform")){
+		platformMin=collision.collider.bounds.min.x;
+		platformMax=collision.collider.bounds.max.x;
+		}
+		if(collisionObject.CompareTag("Enemy") || collisionObject.CompareTag("Player"))
+			Physics.IgnoreCollision (collision.collider, transform.collider);*/
+		}
+
+    public override float GetFearFactor()
+    {
+        return 0.0f;
+    }
+
+    public override void OnFearConquered()
+    {
+        // Do some shit like decrease fear rate
+    }
+
+}

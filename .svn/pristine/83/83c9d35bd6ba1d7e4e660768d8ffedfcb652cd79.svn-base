@@ -1,0 +1,44 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class GroundEnemyBehavior : MonoBehaviour {
+
+	private bool isBlocked=false;
+	[SerializeField] private float movementSpeed;
+	private bool isForward;
+	private float platformMin;
+	private float platformMax;
+	private Vector3 currentDirection;
+
+	// Use this for initialization
+	void Start () {
+		currentDirection = Vector3.forward;
+		isForward = true;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (transform.collider.bounds.min.x <= platformMin || transform.collider.bounds.max.x >= platformMax) {
+			ChangeDirection ();
+		}
+		if(isForward)
+			transform.Translate (Vector3.forward * Time.deltaTime * movementSpeed);
+		else
+			transform.Translate (Vector3.back * Time.deltaTime * movementSpeed);
+	}
+
+	void ChangeDirection(){
+		if (isForward)
+			isForward = false;
+		else
+			isForward = true;
+		}
+	
+	void OnCollisionEnter(Collision collision){
+		Debug.Log(collision.collider.bounds.min.x);
+		Debug.Log(collision.collider.bounds.max.x);
+		platformMin=collision.collider.bounds.min.x;
+		platformMax=collision.collider.bounds.max.x;
+	}
+
+}

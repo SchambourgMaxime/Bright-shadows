@@ -1,0 +1,53 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class LucioleBehavior : EnemyBehaviour {
+    private float speed;
+    private float life;
+	private Vector3 currentDirection;
+    private bool isRepulsed;
+    private int timerRepulsed;
+    public GameObject player;
+	// Use this for initialization
+	void Start () {
+		currentDirection = Vector3.forward;
+
+	}
+
+    public void create(float inSpeed, float inLife) {
+        this.speed = inSpeed;
+        this.life = inLife;
+        isRepulsed=false;
+        timerRepulsed=0;
+    }
+
+	// Update is called once per frame
+	void Update () {
+        Vector3 vecMouv = Vector3.Normalize(player.GetComponent<PlayerController>().transform.position-this.transform.position);
+        if (!isRepulsed) { 
+            transform.Translate(vecMouv * Time.deltaTime * speed); 
+        }
+        else { 
+            transform.Translate(vecMouv * Time.deltaTime * (-speed)); 
+            timerRepulsed--;
+            if (timerRepulsed <= 0) { isRepulsed = true; }
+        }
+    }
+	
+	void RecieveLightDamage(float damageValue){
+        isRepulsed = true;
+        timerRepulsed = 5;
+        life -= damageValue;
+        if (life <= 0) Destroy(gameObject);
+
+		/*GameObject collisionObject = collision.gameObject;
+
+		if(collisionObject.CompareTag("Platform")){
+		platformMin=collision.collider.bounds.min.x;
+		platformMax=collision.collider.bounds.max.x;
+		}
+		if(collisionObject.CompareTag("Enemy") || collisionObject.CompareTag("Player"))
+			Physics.IgnoreCollision (collision.collider, transform.collider);*/
+		}
+
+}
